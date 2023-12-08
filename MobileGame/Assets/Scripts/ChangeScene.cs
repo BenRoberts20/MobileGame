@@ -2,10 +2,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class ChangeScene : MonoBehaviour
 {
     public GameObject warningFrame;
+    public Button btn;
 
     //Creates only a single instance of the selected scene, and removes the rest.
     public void LoadScene(string SceneName)
@@ -17,7 +19,6 @@ public class ChangeScene : MonoBehaviour
     public void LoadSceneIntoCurrentScene(string SceneName)
     {
         SceneManager.LoadScene(SceneName, LoadSceneMode.Additive);
-
     }
 
     //deletes the selected scene

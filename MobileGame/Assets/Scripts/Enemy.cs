@@ -25,7 +25,7 @@ public class Enemy : MonoBehaviour
         transform.position = Vector2.MoveTowards(transform.position, target.transform.position, 3f * Time.deltaTime);
 
         if (Health <= 0)
-        {
+        {   
             Destroy(this.gameObject);
         }
     }
