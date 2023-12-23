@@ -36,7 +36,7 @@ public class Player : MonoBehaviour
     {
         //movement = new Vector2(Input.acceleration.x, Input.acceleration.y) / 10;
         Vector3 movement1 = new Vector3(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
-        transform.position += movement1 * Time.deltaTime;
+        transform.position += (movement1 * speed) * Time.deltaTime;
         //transform.Translate(movement * speed);
         PreventPlayerOffScreen();
     }

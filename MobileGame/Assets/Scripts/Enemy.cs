@@ -10,6 +10,8 @@ public class Enemy : MonoBehaviour
     private int Health = 0;
     private int Damage = 0;
     public int SpawnID = 0;
+    private int TillHoming = 3;
+    public GameObject enemyProjectile;
     // Start is called before the first frame update
     //finds the target
     void Start()
@@ -19,6 +21,7 @@ public class Enemy : MonoBehaviour
         Health = (obj.Health * curWave);
         Damage = (obj.Damage * curWave);
         if (spawner.transform.childCount >= SpawnID) target = spawner.transform.GetChild(SpawnID);
+        StartCoroutine(ShootProjectile(enemyProjectile));
     }
 
     // Update is called once per frame
@@ -49,5 +52,18 @@ public class Enemy : MonoBehaviour
     public int GetDamage()
     {
         return Damage;
+    }
+
+    private IEnumerator ShootProjectile(GameObject projectile)
+    {
+        yield return new WaitForSeconds(Random.Range(4f, 6f));
+        TillHoming -= 1;
+        GameObject proj = Instantiate(projectile, transform.position, transform.rotation);
+        if (TillHoming == 0)
+        {
+            proj.GetComponent<EnemyProjectiles>().isHoming = true;
+            TillHoming = 3;
+        }
+        StartCoroutine(ShootProjectile(projectile));
     }
 }
