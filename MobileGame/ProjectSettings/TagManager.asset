@@ -8,6 +8,7 @@ TagManager:
   - Buff
   - Projectile
   - EnemyProjectile
+  - Asteroid
   layers:
   - Default
   - TransparentFX

@@ -39,7 +39,15 @@ public class UIManager : MonoBehaviour
     //prompts a warning, which asks you if you want to change scene or not.
     public void ToggleWarning(bool value)
     {
-        warningFrame.SetActive(value);
+        ToggleFrame(frames[0], value);
+        ToggleFrame(warningFrame, value);
+        for (int i = 0; i < frames.Length; i++)
+        {
+            if (frames[i].name == "MenuGUI")
+            {
+                ToggleFrame(frames[i], !value);
+            }
+        }
     }
 
     public void OpenFrame(GameObject Frame)
@@ -61,6 +69,11 @@ public class UIManager : MonoBehaviour
         Frame.SetActive(false);
         frames[0].SetActive(true);
         Time.timeScale = 1;
+    }
+
+    private void ToggleFrame(GameObject Frame, bool value)
+    {
+        Frame.SetActive(value);
     }
 
     public void SpeedUpTime()

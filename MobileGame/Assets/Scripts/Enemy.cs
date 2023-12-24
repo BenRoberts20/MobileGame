@@ -54,11 +54,17 @@ public class Enemy : MonoBehaviour
         return Damage;
     }
 
+    public int GetImpactDamage()
+    {
+        return obj.ImpactDamage;
+    }    
+
     private IEnumerator ShootProjectile(GameObject projectile)
     {
         yield return new WaitForSeconds(Random.Range(4f, 6f));
         TillHoming -= 1;
         GameObject proj = Instantiate(projectile, transform.position, transform.rotation);
+        proj.GetComponent<EnemyProjectiles>().SetEnemy(obj);
         if (TillHoming == 0)
         {
             proj.GetComponent<EnemyProjectiles>().isHoming = true;

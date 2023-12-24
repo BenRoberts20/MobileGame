@@ -7,6 +7,7 @@ public class EnemyCreator : ScriptableObject
 {
     public int Health;
     public int Damage;
+    public int ImpactDamage;
     public string Description;
     public int ExpDrop;
     public int FragmentsDrop;

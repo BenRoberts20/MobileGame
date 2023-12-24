@@ -92,4 +92,15 @@ public class EnemySpawner : MonoBehaviour
         return curWave;
     }
 
+    public void RestartWaves()
+    {
+        curWave = 0;
+        for(int i = 0; i < enemyFolder.transform.childCount; i++)
+        {
+            Destroy(enemyFolder.transform.GetChild(i).gameObject);
+        }
+        inIntermission = false;
+        CheckIfCanStartNewWave();
+    }
+
 }

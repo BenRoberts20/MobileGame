@@ -8,6 +8,7 @@ public class EnemyProjectiles : MonoBehaviour
     private float FollowTimer = 4f;
     private float projSpeed = 1.5f;
     private GameObject player;
+    private EnemyCreator enemy;
     void Start()
     {
         player = GameObject.Find("Player");
@@ -33,5 +34,15 @@ public class EnemyProjectiles : MonoBehaviour
             else isHoming = false;
         }
         else this.transform.Translate(0f, -3f * Time.deltaTime, 0f);
+    }
+
+    public void SetEnemy(EnemyCreator Enemy)
+    {
+        enemy = Enemy;
+    }
+
+    public EnemyCreator GetEnemy()
+    {
+        return enemy;
     }
 }

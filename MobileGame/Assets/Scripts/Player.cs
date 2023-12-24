@@ -39,15 +39,19 @@ public class Player : MonoBehaviour
         transform.position += (movement1 * speed) * Time.deltaTime;
         //transform.Translate(movement * speed);
         PreventPlayerOffScreen();
+
+        
     }
 
-    public void TakeDamage(int DamageToTake)
+    private void TakeDamage(int DamageToTake, float intensity, float time)
     {
         Health -= DamageToTake;
-
+        CinemachineShake.Instance.ShakeCamera(intensity, time);
         if (Health <= 0)
         {
-            //Show Result Screen + Reset Wave to 1
+            LoadShipData(ship);
+            GameObject.Find("EnemySpawner").GetComponent<EnemySpawner>().RestartWaves();
+            //Show Result Screen
         }
     }
 
@@ -146,8 +150,26 @@ public class Player : MonoBehaviour
     {
         if (col.tag == "Enemy")
         {
-            Health -= col.GetComponent<Enemy>().GetDamage();
+            TakeDamage(col.GetComponent<Enemy>().GetImpactDamage(), 7.5f, 0.1f);
         }
+        if(col.tag == "EnemyProjectile")
+        {
+            TakeDamage(col.GetComponent<EnemyProjectiles>().GetEnemy().Damage, 3f, 0.1f);
+            Destroy(col.gameObject);
+        }
+        if (col.tag == "Asteroid")
+        {
+            TakeDamage(2, 10f, 0.2f);
+            StartCoroutine(PlayAnimThenDestroy(col.gameObject, 0.5f));
+        }
+    }
+
+    private IEnumerator PlayAnimThenDestroy(GameObject obj, float time)
+    {
+        obj.GetComponent<MoveAsteroid>().canMove = false;
+        obj.GetComponent<Animator>().enabled = true;
+        yield return new WaitForSeconds(time);
+        Destroy(obj);
     }
 
     private void GrabData()
@@ -195,8 +217,8 @@ public class Player : MonoBehaviour
     public void LoadShipData(Ships Ship)
     {
         ship = Ship;
-        Health = ship.Health;
-        Damage = ship.Damage;
+        Health = ship.Health + BonusHealth;
+        Damage = ship.Damage + BonusDamage;
         speed = ship.Speed;
         this.GetComponent<SpriteRenderer>().sprite = ship.sprite;
     }
