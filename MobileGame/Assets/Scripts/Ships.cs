@@ -12,4 +12,5 @@ public class Ships : ScriptableObject
     public int Damage;
     public float Speed;
     public Sprite sprite;
+    public RuntimeAnimatorController animator;
 }

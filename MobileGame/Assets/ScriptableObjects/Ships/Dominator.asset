@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Name: Dominator
   Description: Strongest
-  Cost: 50
+  Cost: 1500
   Health: 150
   Damage: 20
   Speed: 2.5

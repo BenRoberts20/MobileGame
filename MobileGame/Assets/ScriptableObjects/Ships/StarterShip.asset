@@ -19,3 +19,4 @@ MonoBehaviour:
   Damage: 1
   Speed: 2
   sprite: {fileID: 21300000, guid: 914376c1f9ac9624f9eaa6ad0ec418aa, type: 3}
+  animator: {fileID: -2508214407744573930, guid: 5349f3a69c9446743b23805335c1e2bc, type: 3}

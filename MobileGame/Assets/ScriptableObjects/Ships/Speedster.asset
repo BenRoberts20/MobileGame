@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Name: Speedster
   Description: Fastest Ship
-  Cost: 250
+  Cost: 400
   Health: 15
   Damage: 3
   Speed: 3.5

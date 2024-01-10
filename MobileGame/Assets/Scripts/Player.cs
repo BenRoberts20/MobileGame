@@ -10,7 +10,8 @@ public class Player : MonoBehaviour
     private int Level = 1;
     private int Exp = 0;
     private int ExpNeeded = 15;
-    private int Health = 10;
+    private int MaxHealth = 10;
+    private int Health;
     private int Damage = 1;
     private int BonusHealth = 0;
     private int BonusDamage = 0;
@@ -20,15 +21,18 @@ public class Player : MonoBehaviour
     private float speed = 1;
     private int Points = 0;
     public Slider ExpBar;
+    public Slider HealthBar;
     public TMP_Text LevelText;
     public TMP_Text FragmentsText;
     public Ships ship;
+    public GameObject ResultScreen;
+    public Button retryButton;
 
     void Start()
     {
         GrabData();
+        LoadHealth();
         UpdateUI();
-        LoadShipData(ship);
     }
 
     //Uses Accelerometer to move.
@@ -46,23 +50,36 @@ public class Player : MonoBehaviour
     private void TakeDamage(int DamageToTake, float intensity, float time)
     {
         Health -= DamageToTake;
+        UpdateUI();
         CinemachineShake.Instance.ShakeCamera(intensity, time);
         if (Health <= 0)
         {
-            LoadShipData(ship);
-            GameObject.Find("EnemySpawner").GetComponent<EnemySpawner>().RestartWaves();
-            //Show Result Screen
+            LoadResults();
         }
+    }
+
+    private void LoadResults()
+    {
+        ResultScreen.SetActive(true);
+        Debug.Log(ResultScreen.transform.Find("Info").GetComponent<TMP_Text>());
+    }
+
+    public void RestartGame()
+    {
+        GameObject.Find("EnemySpawner").GetComponent<EnemySpawner>().RestartWaves();
+        LoadHealth();
+        UpdateUI();
+        ResultScreen.SetActive(false);
     }
 
     public int GetDamage()
     {
-        return (Damage + BonusDamage);
+        return Damage;
     }
 
     public int GetHealth()
     {
-        return (Health + BonusHealth);
+        return MaxHealth;
     }
     public int GetLevel()
     {
@@ -82,9 +99,11 @@ public class Player : MonoBehaviour
         if (Points > 0)
         {
             BonusHealth += Amount;
+            Health += Amount;
+            MaxHealth += Amount;
             Points -= 1;
             PlayerPrefs.SetInt("Points", Points);
-            PlayerPrefs.SetInt("Health", Health);
+            PlayerPrefs.SetInt("Health", BonusHealth);
         }
     }
 
@@ -93,9 +112,10 @@ public class Player : MonoBehaviour
         if (Points > 0)
         {
             BonusDamage += Amount;
+            Damage += Amount;
             Points -= 1;
             PlayerPrefs.SetInt("Points", Points);
-            PlayerPrefs.SetInt("Damage", Damage);
+            PlayerPrefs.SetInt("Damage", BonusDamage);
         }
     }
     public void IncreaseFragmentsMultiplier(int Amount)
@@ -146,6 +166,13 @@ public class Player : MonoBehaviour
         UpdateUI();
     }
 
+    public void RemoveFragments(int amount)
+    {
+        Fragments -= amount;
+        PlayerPrefs.SetInt("Fragments", Fragments);
+        FragmentsText.text = Fragments.ToString();
+    }
+
     private void OnTriggerEnter2D(Collider2D col)
     {
         if (col.tag == "Enemy")
@@ -190,6 +217,7 @@ public class Player : MonoBehaviour
             if (s == "Starter Ship") ship = GameObject.Find("ShipsSO").GetComponent<ShipsLibrary>().StarterShip;
             if (s == "Speedster") ship = GameObject.Find("ShipsSO").GetComponent<ShipsLibrary>().Speedster;
         }
+        Health = MaxHealth;
     }
 
     public void SaveData()
@@ -212,15 +240,33 @@ public class Player : MonoBehaviour
         FragmentsText.text = Fragments.ToString();
         ExpBar.maxValue = ExpNeeded;
         ExpBar.value = Exp;
+        HealthBar.maxValue = MaxHealth;
+        HealthBar.value = Health;
     }
 
     public void LoadShipData(Ships Ship)
     {
         ship = Ship;
-        Health = ship.Health + BonusHealth;
+        MaxHealth = ship.Health + BonusHealth;
         Damage = ship.Damage + BonusDamage;
         speed = ship.Speed;
-        this.GetComponent<SpriteRenderer>().sprite = ship.sprite;
+        if (ship.animator)
+        {
+            this.gameObject.GetComponent<Animator>().runtimeAnimatorController = ship.animator;
+        }
+        else if(ship.animator == null)
+        {
+            print("this was null");
+            this.gameObject.GetComponent<Animator>().runtimeAnimatorController = null;
+        }
+        this.gameObject.GetComponent<SpriteRenderer>().sprite = ship.sprite;
+
+    }
+
+    private void LoadHealth()
+    {
+        LoadShipData(ship);
+        Health = MaxHealth;
     }
 
     //Boundaries to prevent player going off screen

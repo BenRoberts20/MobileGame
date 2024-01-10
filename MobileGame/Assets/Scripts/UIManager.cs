@@ -13,6 +13,7 @@ public class UIManager : MonoBehaviour
     private Player plr;
     public GameObject[] frames;
     public GameObject[] ShipButtons;
+    public GameObject[] buyButtons;
 
     private void Start()
     {
@@ -63,6 +64,7 @@ public class UIManager : MonoBehaviour
         }
         if (Frame.name == "StatsGUI") LoadStatsInfo();
         if (Frame.name == "ShipsGUI") CheckForOwnedShips();
+        if (Frame.name == "ShopGUI") UpdateBuyButtons();
     }
     public void CloseFrame(GameObject Frame)
     {
@@ -122,9 +124,49 @@ public class UIManager : MonoBehaviour
         }
     }
 
+    private void UpdateBuyButtons()
+    {
+        ShipsLibrary shipsManager = GameObject.Find("ShipsSO").GetComponent<ShipsLibrary>();
+        for (int i = 0; i < buyButtons.Length; i++)
+        {
+            if (PlayerPrefs.HasKey("Dominator") && buyButtons[i].name == "BuyDominatorBtn")
+            {
+                buyButtons[i].GetComponentInChildren<TMP_Text>().text = "Owned";
+            }
+            else if (buyButtons[i].name == "BuyDominatorBtn")
+            {
+                buyButtons[i].GetComponentInChildren<TMP_Text>().text = "Buy " + shipsManager.Dominator.Cost + " Fragments";
+            }
+
+            if (PlayerPrefs.HasKey("Speedster") && buyButtons[i].name == "BuySpeedsterBtn")
+            {
+                buyButtons[i].GetComponentInChildren<TMP_Text>().text = "Owned";
+            }
+            else if (buyButtons[i].name == "BuySpeedsterBtn")
+            {
+                buyButtons[i].GetComponentInChildren<TMP_Text>().text = "Buy " + shipsManager.Speedster.Cost + " Fragments";
+            }
+        }
+    }
+
     public void ChangeShip(Ships Ship)
     {
         plr.LoadShipData(Ship);
         CloseFrame(GameObject.Find("ShipsGUI"));
+    }
+
+    public void BuyShip(Ships shipToBuy)
+    {
+        if (!PlayerPrefs.HasKey(shipToBuy.Name))
+        {
+            if (PlayerPrefs.HasKey("Fragments"))
+            {
+                if (PlayerPrefs.GetInt("Fragments") >= shipToBuy.Cost)
+                {
+                    GameObject.Find("Player").GetComponent<Player>().RemoveFragments(shipToBuy.Cost);
+                    PlayerPrefs.SetString(shipToBuy.Name, "Owned");
+                }
+            }
+        }   
     }
 }
