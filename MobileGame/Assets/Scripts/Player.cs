@@ -61,7 +61,12 @@ public class Player : MonoBehaviour
     private void LoadResults()
     {
         ResultScreen.SetActive(true);
-        Debug.Log(ResultScreen.transform.Find("Info").GetComponent<TMP_Text>());
+        int curWave = GameObject.Find("EnemySpawner").GetComponent<EnemySpawner>().GetCurrentWave();
+        int fragmentsReward = curWave * 5;
+        ResultScreen.transform.Find("Info").GetComponent<TMP_Text>().text = "Wave Reached: " + curWave + "\n" + 
+            "Rewards: " + fragmentsReward + " Fragments";
+        Fragments += fragmentsReward;
+        Time.timeScale = 0;
     }
 
     public void RestartGame()
