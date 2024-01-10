@@ -7,7 +7,6 @@ using TMPro;
 
 public class UIManager : MonoBehaviour
 {
-    public GameObject warningFrame;
     public TMP_Text HealthTxt;
     public TMP_Text DamageTxt;
     private Player plr;
@@ -22,6 +21,7 @@ public class UIManager : MonoBehaviour
     //Creates only a single instance of the selected scene, and removes the rest.
     public void LoadScene(string SceneName)
     {
+        Time.timeScale = 1;
         SceneManager.LoadScene(SceneName, LoadSceneMode.Single);
     }
 
@@ -35,20 +35,6 @@ public class UIManager : MonoBehaviour
     public void DeleteScene(string SceneName)
     {
         SceneManager.UnloadSceneAsync(SceneName);
-    }
-
-    //prompts a warning, which asks you if you want to change scene or not.
-    public void ToggleWarning(bool value)
-    {
-        ToggleFrame(frames[0], value);
-        ToggleFrame(warningFrame, value);
-        for (int i = 0; i < frames.Length; i++)
-        {
-            if (frames[i].name == "MenuGUI")
-            {
-                ToggleFrame(frames[i], !value);
-            }
-        }
     }
 
     public void OpenFrame(GameObject Frame)
@@ -71,11 +57,6 @@ public class UIManager : MonoBehaviour
         Frame.SetActive(false);
         frames[0].SetActive(true);
         Time.timeScale = 1;
-    }
-
-    private void ToggleFrame(GameObject Frame, bool value)
-    {
-        Frame.SetActive(value);
     }
 
     public void SpeedUpTime()
